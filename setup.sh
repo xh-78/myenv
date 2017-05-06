@@ -36,10 +36,10 @@ function prepare_tool() {
 
 echo 'setup tmux ...'
 prepare_tool 'tmux'
-if [ -f /etc/tmux.conf ]; then
-    mv /etc/tmux.conf /etc/tmux.conf.bak
+if [ -f ~/.tmux.conf ]; then
+    mv ~/.tmux.conf ~/.tmux.conf.bak
 fi
-mv ./tmux/tmux.conf /etc/tmux.conf
+mv ./tmux/tmux.conf ~/.tmux.conf
 
 echo 'setup vim ...'
 prepare_tool 'vim'
