@@ -1,0 +1,156 @@
+set nocompatible
+filetype off
+
+set rtp+=~/.vim/bundle/Vundle.vim
+call vundle#begin()
+
+Plugin 'VundleVim/Vundle.vim'
+Plugin 'fatih/vim-go'
+Plugin 'Python-mode-klen'
+Plugin 'The-NERD-Commenter'
+Plugin 'godlygeek/tabular'
+Plugin 'plasticboy/vim-markdown'
+Plugin 'SuperTab'
+
+call vundle#end()
+filetype plugin indent on
+
+"set SuperTab default complete type
+"let g:SuperTabDefaultCompletionType = "<c-x><c-p>"
+
+"突出当前行
+"set cursorline
+
+"打开光标所在行列位置的显示
+set ruler
+
+"状态栏显示设置
+set statusline=[%F]%y%r%m%*%=[Line:%l/%L,Column:%c][%p%%]
+set laststatus=2
+
+"激活鼠标功能
+set mouse=a
+
+"显示相对行号
+set relativenumber
+set number
+
+"tags路径
+"set tags+=/home/huang_zhenglin/http-lz/tags
+set tags+=/usr/include/tags
+set tags+=/home/huang_zhenglin/workspace/http2/src/tags
+
+"语法高亮
+syntax on
+
+"高亮显示搜索结果
+set hls
+set incsearch
+
+"使能man.vim插件
+:source $VIMRUNTIME/ftplugin/man.vim
+
+"快速进入底行模式
+map <space> :
+
+"快速全局缩进
+nnoremap <F2> gg=G
+
+"Golang GoImports short cut
+nnoremap <F3> :GoImports<CR>
+
+nnoremap <F8> :call CompileAndRun()<CR>
+func CompileAndRun()
+    exec "w"
+    if &filetype == 'c'
+        exec "!clang % && ./a.out && rm a.out"
+    elseif &filetype == 'cpp'
+        exec "!clang++ % && ./a.out && rm a.out"
+    elseif &filetype == 'go'
+        exec "!go build -o test % && ./test && rm test"
+    elseif &filetype == 'python'
+        exec "!python3 %"
+    elseif &filetype == 'sh'
+        exec "!sh %"
+    elseif &filetype == 'lua'
+        exec "!lua %"
+    endif
+endfunc
+
+"缩进与tab宽度
+set smartindent
+set cindent
+set tabstop=4
+set shiftwidth=4
+set expandtab
+
+"退格键定义
+set backspace=indent,eol,start
+
+"始终保持底部行数
+set scrolloff=5
+
+"窗口切换
+map <c-h> <c-w>h
+map <c-j> <c-w>j
+map <c-k> <c-w>k
+map <c-l> <c-w>l
+
+"括号补全
+inoremap ( ()<ESC>i
+inoremap [ []<ESC>i
+inoremap { {}<ESC>i
+inoremap " ""<ESC>i
+inoremap ' ''<ESC>i
+
+"快速插入main函数
+inoreab main_ int main(int argc, const char *argv[])<CR>{<CR>return 0;<CR>}<ESC>2ko
+
+"scheme setting
+colorscheme desert
+
+"set textwidth
+set textwidth=80
+
+"tell vim terminal is capable of using 256 colors
+set t_Co=256
+
+"settings about tmux
+if exists('$TMUX')
+    set term=screen-256color
+endif
+
+"vim-markdown setting
+let g:vim_markdown_folding_disable = 1
+
+"autocmd BufNewFile *.cpp,*.[ch] exec ":call SetTitle()"
+func SetTitle()
+    call setline(1, "/***********************************************")
+    call append(line("."), "   > File Name:      ".expand("%"))
+    call append(line(".")+1, "   > Author:         zhenglin.huang")
+    call append(line(".")+2, "   > Created Time:   ".strftime("%F"))
+    call append(line(".")+3, "   > Email:          zhenglin.huang@qdreamer.com")
+    call append(line(".")+4, "***********************************************/")
+    call append(line(".")+5, "")
+    if &filetype == 'c' 
+        call append(line(".")+6, "#include <stdio.h> ")
+        call append(line(".")+7, "")
+    endif
+endfunc
+
+autocmd BufNewFile *.py exec ":call InitPython()"
+func InitPython()
+    call setline(1, "#! /usr/bin/env python")
+    call append(line("."), "# -*- coding:utf-8 -*-")
+    call append(line(".")+1, "")
+    call append(line(".")+2, "")
+endfunc
+
+autocmd BufNewFile *.lua exec ":call InitLua()"
+func InitLua()
+    call setline(1, "#! /usr/bin/env lua")
+    call append(line("."), "")
+    call append(line(".")+1, "")
+endfunc
+
+autocmd BufNewFile * normal G
