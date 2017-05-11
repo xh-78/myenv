@@ -10,10 +10,15 @@ Plugin 'Python-mode-klen'
 Plugin 'The-NERD-Commenter'
 Plugin 'godlygeek/tabular'
 Plugin 'plasticboy/vim-markdown'
+Plugin 'AutoComplPop'
 Plugin 'SuperTab'
+Plugin 'delimitMate.vim'
 
 call vundle#end()
 filetype plugin indent on
+
+"tell vim terminal is capable of using 256 colors
+set t_Co=256
 
 "set SuperTab default complete type
 "let g:SuperTabDefaultCompletionType = "<c-x><c-p>"
@@ -96,24 +101,15 @@ map <c-j> <c-w>j
 map <c-k> <c-w>k
 map <c-l> <c-w>l
 
-"括号补全
-inoremap ( ()<ESC>i
-inoremap [ []<ESC>i
-inoremap { {}<ESC>i
-inoremap " ""<ESC>i
-inoremap ' ''<ESC>i
-
-"快速插入main函数
-inoreab main_ int main(int argc, const char *argv[])<CR>{<CR>return 0;<CR>}<ESC>2ko
-
 "scheme setting
-colorscheme desert
+colorscheme elflord 
+
+"Omni menu colors
+hi Pmenu ctermbg=lightblue
+hi Pmenu guibg=lightblue
 
 "set textwidth
 set textwidth=80
-
-"tell vim terminal is capable of using 256 colors
-set t_Co=256
 
 "settings about tmux
 if exists('$TMUX')
