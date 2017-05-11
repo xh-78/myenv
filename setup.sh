@@ -39,16 +39,16 @@ prepare_tool 'tmux'
 if [ -f ~/.tmux.conf ]; then
     mv ~/.tmux.conf ~/.tmux.conf.bak
 fi
-mv ./tmux/tmux.conf ~/.tmux.conf
+cp ./tmux/tmux.conf ~/.tmux.conf
 
 echo 'setup vim ...'
 prepare_tool 'vim'
 prepare_tool 'git'
-if [ -f ~/.vim ]; then
+if [ -d ~/.vim ]; then
     mv ~/.vim ~/.vim.bak
 fi
 git clone https://github.com/VundleVim/Vundle.vim.git ~/.vim/bundle/Vundle.vim
 if [ -f ~/.vimrc ]; then
     mv ~/.vimrc ~/.vimrc.bak
 fi
-mv ./vim/vimrc ~/.vimrc
+cp ./vim/vimrc ~/.vimrc
