@@ -52,3 +52,4 @@ if [ -f ~/.vimrc ]; then
     mv ~/.vimrc ~/.vimrc.bak
 fi
 cp ./vim/vimrc ~/.vimrc
+vim -c PluginInstall
