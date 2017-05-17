@@ -36,7 +36,7 @@ function prepare_tool() {
 
 echo 'setup tmux ...'
 prepare_tool 'tmux'
-prepare_tool 'xlip'
+prepare_tool 'xclip'
 if [ -f ~/.tmux.conf ]; then
     mv ~/.tmux.conf ~/.tmux.conf.bak
 fi
