@@ -13,6 +13,7 @@ Plugin 'plasticboy/vim-markdown'
 Plugin 'AutoComplPop'
 Plugin 'SuperTab'
 Plugin 'delimitMate.vim'
+Plugin 'kien/ctrlp.vim'
 
 call vundle#end()
 filetype plugin indent on
@@ -21,7 +22,7 @@ filetype plugin indent on
 set t_Co=256
 
 "set SuperTab default complete type
-"let g:SuperTabDefaultCompletionType = "<c-x><c-p>"
+let g:SuperTabDefaultCompletionType = "<c-x><c-p>"
 
 "突出当前行
 "set cursorline
@@ -41,9 +42,9 @@ set relativenumber
 set number
 
 "tags路径
-"set tags+=/home/huang_zhenglin/http-lz/tags
 set tags+=/usr/include/tags
-set tags+=/home/huang_zhenglin/workspace/http2/src/tags
+set tags+=tags;
+"set autochdir
 
 "语法高亮
 syntax on
@@ -64,7 +65,7 @@ nnoremap <F2> gg=G
 "Golang GoImports short cut
 nnoremap <F3> :GoImports<CR>
 
-nnoremap <F8> :call CompileAndRun()<CR>
+nnoremap <F4> :call CompileAndRun()<CR>
 func CompileAndRun()
     exec "w"
     if &filetype == 'c'

@@ -18,33 +18,35 @@ function tool_installed() {
 }
 
 function prepare_tool() {
-    tool_installed "$1"
-    if [ $? -eq 1 ] ; then
-        echo "$1 already installed"
-    else
-        echo "$1 not install, so installing ..."
-        if [ "${os}" == 'RedHat' ]; then
-            sudo yum install $1 -y
-        elif [ "${os}" == 'Debian' ]; then
-            sudo apt-get install $1 -y
+    for tool in $@
+    do
+        tool_installed "$tool"
+        if [ $? -eq 1 ] ; then
+            echo "$tool already installed"
         else
-            echo "Please install $1 first"
-            exit
+            echo "$tool not install, so installing ..."
+            if [ "${os}" == 'RedHat' ]; then
+                sudo yum install $tool -y
+            elif [ "${os}" == 'Debian' ]; then
+                sudo apt-get install $tool -y
+            else
+                echo "Please install $tool first"
+                exit
+            fi
         fi
-    fi
+    done
 }
 
+echo 'prepareing tool ...'
+prepare_tool 'tmux' 'xclip' 'vim' 'git'
+
 echo 'setup tmux ...'
-prepare_tool 'tmux'
-prepare_tool 'xclip'
 if [ -f ~/.tmux.conf ]; then
     mv ~/.tmux.conf ~/.tmux.conf.bak
 fi
 cp ./tmux/tmux.conf ~/.tmux.conf
 
 echo 'setup vim ...'
-prepare_tool 'vim'
-prepare_tool 'git'
 if [ -d ~/.vim ]; then
     mv ~/.vim ~/.vim.bak
 fi
