@@ -56,6 +56,11 @@ set incsearch
 "使能man.vim插件
 :source $VIMRUNTIME/ftplugin/man.vim
 
+"short cut settings
+nmap <C-x>n :bnext<CR>
+nmap <C-x>p :bprev<CR>
+nmap <C-x>c :bdelete %<CR>
+
 "快速进入底行模式
 map <space> :
 
