@@ -38,7 +38,7 @@ function prepare_tool() {
 }
 
 echo 'prepareing tool ...'
-prepare_tool 'tmux' 'xclip' 'vim' 'git'
+prepare_tool 'tmux' 'vim' 'git'
 
 echo 'setup tmux ...'
 if [ -f ~/.tmux.conf ]; then

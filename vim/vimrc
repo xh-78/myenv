@@ -11,6 +11,7 @@ Plugin 'The-NERD-Commenter'
 Plugin 'godlygeek/tabular'
 Plugin 'plasticboy/vim-markdown'
 Plugin 'AutoComplPop'
+Plugin 'ntpeters/vim-better-whitespace'
 Plugin 'SuperTab'
 Plugin 'delimitMate.vim'
 Plugin 'kien/ctrlp.vim'
@@ -78,7 +79,7 @@ func CompileAndRun()
     elseif &filetype == 'cpp'
         exec "!clang++ % && ./a.out && rm a.out"
     elseif &filetype == 'go'
-        exec "!go build -o test % && ./test && rm test"
+        exec "!go run %"
     elseif &filetype == 'python'
         exec "!python3 %"
     elseif &filetype == 'sh'
@@ -108,14 +109,11 @@ map <c-k> <c-w>k
 map <c-l> <c-w>l
 
 "scheme setting
-colorscheme elflord 
+colorscheme elflord
 
 "Omni menu colors
 hi Pmenu ctermbg=lightblue
 hi Pmenu guibg=lightblue
-
-"set textwidth
-set textwidth=80
 
 "settings about tmux
 if exists('$TMUX')
@@ -134,7 +132,7 @@ func SetTitle()
     call append(line(".")+3, "   > Email:          zhenglin.huang@qdreamer.com")
     call append(line(".")+4, "***********************************************/")
     call append(line(".")+5, "")
-    if &filetype == 'c' 
+    if &filetype == 'c'
         call append(line(".")+6, "#include <stdio.h> ")
         call append(line(".")+7, "")
     endif
