@@ -10,6 +10,8 @@ Plugin 'Python-mode-klen'
 Plugin 'The-NERD-Commenter'
 Plugin 'godlygeek/tabular'
 Plugin 'plasticboy/vim-markdown'
+Plugin 'fugitive.vim'
+Plugin 'iamcco/markdown-preview.vim'
 Plugin 'AutoComplPop'
 Plugin 'ntpeters/vim-better-whitespace'
 Plugin 'SuperTab'
@@ -26,7 +28,7 @@ set t_Co=256
 let g:SuperTabDefaultCompletionType = "<c-x><c-p>"
 
 "突出当前行
-"set cursorline
+set cursorline
 
 "打开光标所在行列位置的显示
 set ruler
@@ -36,7 +38,7 @@ set statusline=[%F]%y%r%m%*%=[Line:%l/%L,Column:%c][%p%%]
 set laststatus=2
 
 "激活鼠标功能
-set mouse=a
+"set mouse=a
 
 "显示相对行号
 set relativenumber
@@ -62,16 +64,23 @@ nmap <C-x>n :bnext<CR>
 nmap <C-x>p :bprev<CR>
 nmap <C-x>c :bdelete %<CR>
 
+map <c-h> <c-w>h
+map <c-j> <c-w>j
+map <c-k> <c-w>k
+map <c-l> <c-w>l
+
 "快速进入底行模式
 map <space> :
-
 "快速全局缩进
-nnoremap <F2> gg=G
 
+map <leader>t= :Tab /=<CR>
+map <leader>t: :Tab /:<CR>
+
+nnoremap <F2> gg=G
 "Golang GoImports short cut
 nnoremap <F3> :GoImports<CR>
-
 nnoremap <F4> :call CompileAndRun()<CR>
+
 func CompileAndRun()
     exec "w"
     if &filetype == 'c'
@@ -102,12 +111,6 @@ set backspace=indent,eol,start
 "始终保持底部行数
 set scrolloff=5
 
-"窗口切换
-map <c-h> <c-w>h
-map <c-j> <c-w>j
-map <c-k> <c-w>k
-map <c-l> <c-w>l
-
 "scheme setting
 colorscheme elflord
 
@@ -122,6 +125,7 @@ endif
 
 "vim-markdown setting
 let g:vim_markdown_folding_disable = 1
+set nofoldenable
 
 "autocmd BufNewFile *.cpp,*.[ch] exec ":call SetTitle()"
 func SetTitle()
@@ -146,7 +150,7 @@ func InitPython()
     call append(line(".")+2, "")
 endfunc
 
-autocmd BufNewFile *.lua exec ":call InitLua()"
+"autocmd BufNewFile *.lua exec ":call InitLua()"
 func InitLua()
     call setline(1, "#! /usr/bin/env lua")
     call append(line("."), "")
@@ -154,3 +158,10 @@ func InitLua()
 endfunc
 
 autocmd BufNewFile * normal G
+
+"scons settings
+autocmd BufReadPost SConstruct,Sconstruct,sconstruct,SConscript exec ":call InitScons()"
+func InitScons()
+    exec ":set filetype=python"
+    exec ":let g:pymode_lint = 0"
+endfunc
