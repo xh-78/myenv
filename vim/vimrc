@@ -19,12 +19,18 @@ Plugin 'jsfaint/gen_tags.vim'
 Plugin 'SuperTab'
 Plugin 'delimitMate.vim'
 Plugin 'kien/ctrlp.vim'
+Plugin 'rust-lang/rust.vim'
 
 call vundle#end()
 filetype plugin indent on
 
 "tell vim terminal is capable of using 256 colors
 set t_Co=256
+
+"gen_tags disable ctags support
+let g:loaded_gentags#ctags = 1
+
+let g:rustfmt_autosave = 1
 
 "set SuperTab default complete type
 let g:SuperTabDefaultCompletionType = "<c-x><c-p>"
@@ -114,7 +120,7 @@ set backspace=indent,eol,start
 set scrolloff=5
 
 "scheme setting
-colorscheme elflord
+colorscheme ron
 
 "Omni menu colors
 hi Pmenu ctermbg=lightblue
@@ -139,7 +145,7 @@ func SetTitle()
     call append(line(".")+4, "***********************************************/")
     call append(line(".")+5, "")
     if &filetype == 'c'
-        call append(line(".")+6, "#include <stdio.h> ")
+        call append(line(".")+6, "#include <stdio.h>")
         call append(line(".")+7, "")
     endif
 endfunc
