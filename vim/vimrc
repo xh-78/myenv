@@ -15,7 +15,6 @@ Plugin 'fugitive.vim'
 Plugin 'iamcco/markdown-preview.vim'
 Plugin 'AutoComplPop'
 Plugin 'ntpeters/vim-better-whitespace'
-Plugin 'jsfaint/gen_tags.vim'
 Plugin 'SuperTab'
 Plugin 'delimitMate.vim'
 Plugin 'kien/ctrlp.vim'
@@ -26,9 +25,6 @@ filetype plugin indent on
 
 "tell vim terminal is capable of using 256 colors
 set t_Co=256
-
-"gen_tags disable ctags support
-let g:loaded_gentags#ctags = 1
 
 let g:rustfmt_autosave = 1
 
@@ -77,14 +73,12 @@ map <c-j> <c-w>j
 map <c-k> <c-w>k
 map <c-l> <c-w>l
 
-"快速进入底行模式
-map <space> :
 "快速全局缩进
+nnoremap <F2> gg=G
 
 map <leader>t= :Tab /=<CR>
 map <leader>t: :Tab /:<CR>
 
-nnoremap <F2> gg=G
 "Golang GoImports short cut
 nnoremap <F3> :GoImports<CR>
 nnoremap <F4> :call CompileAndRun()<CR>
@@ -132,7 +126,7 @@ if exists('$TMUX')
 endif
 
 "vim-markdown setting
-let g:vim_markdown_folding_disable = 1
+let g:vim_markdown_folding_disabled = 1
 set nofoldenable
 
 "autocmd BufNewFile *.cpp,*.[ch] exec ":call SetTitle()"
@@ -173,3 +167,5 @@ func InitScons()
     exec ":set filetype=python"
     exec ":let g:pymode_lint = 0"
 endfunc
+
+autocmd QuickFixCmdPost * vert copen 90
