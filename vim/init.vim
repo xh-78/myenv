@@ -1,38 +1,28 @@
-set nocompatible
-filetype off
+call plug#begin('~/.local/share/nvim/plugged')
 
-set rtp+=~/.vim/bundle/Vundle.vim
-call vundle#begin()
+Plug 'junegunn/vim-easy-align'
+Plug 'aceofall/gtags.vim'
+Plug 'Valloric/YouCompleteMe'
+Plug 'rust-lang/rust.vim', {'for': 'rust'}
+Plug 'rdnetto/YCM-Generator', { 'branch': 'stable' }
+Plug 'fatih/vim-go', { 'for': 'go' }
+Plug 'plasticboy/vim-markdown', {'for': 'markdown'}
+Plug 'iamcco/markdown-preview.vim', {'for': 'markdown'}
+Plug 'tbastos/vim-lua', {'for': 'lua'}
+Plug 'Raimondi/delimitMate'
+Plug 'scrooloose/nerdcommenter'
+Plug 'w0rp/ale'
+Plug 'davidhalter/jedi-vim', {'for': 'python'}
+Plug 'morhetz/gruvbox'
+Plug 'airblade/vim-gitgutter'
 
-Plugin 'VundleVim/Vundle.vim'
-Plugin 'fatih/vim-go'
-Plugin 'Python-mode-klen'
-Plugin 'The-NERD-Commenter'
-Plugin 'godlygeek/tabular'
-Plugin 'tbastos/vim-lua'
-Plugin 'plasticboy/vim-markdown'
-Plugin 'fugitive.vim'
-Plugin 'iamcco/markdown-preview.vim'
-Plugin 'AutoComplPop'
-Plugin 'ntpeters/vim-better-whitespace'
-Plugin 'SuperTab'
-Plugin 'delimitMate.vim'
-Plugin 'kien/ctrlp.vim'
-Plugin 'rust-lang/rust.vim'
+call plug#end()
 
-call vundle#end()
-filetype plugin indent on
-
-"tell vim terminal is capable of using 256 colors
 set t_Co=256
 
 let g:rustfmt_autosave = 1
 
-"set SuperTab default complete type
-let g:SuperTabDefaultCompletionType = "<c-x><c-p>"
-
-"突出当前行
-set cursorline
+set hidden
 
 "打开光标所在行列位置的显示
 set ruler
@@ -41,12 +31,9 @@ set ruler
 set statusline=[%F]%y%r%m%*%=[Line:%l/%L,Column:%c][%p%%]
 set laststatus=2
 
-"激活鼠标功能
-"set mouse=a
-
 "显示相对行号
-set relativenumber
-set number
+"set relativenumber
+"set number
 
 "tags路径
 set tags+=/usr/include/tags
@@ -60,18 +47,22 @@ syntax on
 set hls
 set incsearch
 
+set updatetime=200
+
 "使能man.vim插件
-:source $VIMRUNTIME/ftplugin/man.vim
+":source $VIMRUNTIME/ftplugin/man.vim
 
 "short cut settings
 nmap <C-x>n :bnext<CR>
 nmap <C-x>p :bprev<CR>
 nmap <C-x>c :bdelete %<CR>
+nmap <C-x>j :cn<CR>
+nmap <C-x>k :cp<CR>
 
-map <c-h> <c-w>h
-map <c-j> <c-w>j
-map <c-k> <c-w>k
-map <c-l> <c-w>l
+"map <c-h> <c-w>h
+"map <c-j> <c-w>j
+"map <c-k> <c-w>k
+"map <c-l> <c-w>l
 
 "快速全局缩进
 nnoremap <F2> gg=G
@@ -82,6 +73,8 @@ map <leader>t: :Tab /:<CR>
 "Golang GoImports short cut
 nnoremap <F3> :GoImports<CR>
 nnoremap <F4> :call CompileAndRun()<CR>
+
+let g:go_template_autocreate = 0
 
 func CompileAndRun()
     exec "w"
@@ -114,20 +107,24 @@ set backspace=indent,eol,start
 set scrolloff=5
 
 "scheme setting
-colorscheme ron
-
-"Omni menu colors
-hi Pmenu ctermbg=lightblue
-hi Pmenu guibg=lightblue
-
-"settings about tmux
-if exists('$TMUX')
-    set term=screen-256color
-endif
+colorscheme gruvbox
+set background=dark
+set cursorline
+highlight CursorLine cterm=NONE guibg=#C0C0C0
 
 "vim-markdown setting
 let g:vim_markdown_folding_disabled = 1
 set nofoldenable
+
+"ycm setting
+let g:ycm_global_ycm_extra_conf = "/home/huang_zhenglin/.ycm_extra_conf.py"
+let g:ycm_python_binary_path = "/usr/bin/python3"
+let g:ycm_server_python_interpreter = "/usr/bin/python2"
+let g:ycm_autoclose_preview_window_after_completion = 1
+let g:ycm_autoclose_preview_window_after_insertion = 1
+let g:ycm_confirm_extra_conf = 0
+map <leader>c :YcmCompleter GoToDeclaration <CR>
+map <leader>f :YcmCompleter GoToDefinition <CR>
 
 "autocmd BufNewFile *.cpp,*.[ch] exec ":call SetTitle()"
 func SetTitle()
@@ -168,4 +165,36 @@ func InitScons()
     exec ":let g:pymode_lint = 0"
 endfunc
 
+autocmd BufWritePost *.go exec ":GoImports"
+
 autocmd QuickFixCmdPost * vert copen 90
+
+autocmd InsertEnter * exec ":set norelativenumber nonumber"
+autocmd InsertLeave * exec ":set relativenumber number"
+autocmd BufWinEnter * exec ":set relativenumber number"
+
+func EnterTerm()
+    exec ":set norelativenumber nonumber"
+    exec ":setlocal statusline=%{b:term_title}"
+endfunc
+
+autocmd TermOpen * exec ":call EnterTerm()"
+
+"gtags-vim settings
+set cscopetag
+set cscopeprg='gtags-cscope'
+let GtagsCscope_Auto_Load = 1
+let GtagsCscope_Auto_Map = 1
+let GtagsCscope_Quiet = 1
+
+"jdei-vim settings
+let g:jedi#goto_command = "<C-]>"
+let g:jedi#completions_enabled = 0
+let g:jedi#force_py_version = 3 
+
+"vim-easyalign settings
+vmap <Enter> <Plug>(EasyAlign)
+nmap ga <Plug>(EasyAlign)
+
+packloadall
+silent! helptags ALL
