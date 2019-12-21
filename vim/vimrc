@@ -1,22 +1,31 @@
-call plug#begin('~/.local/share/nvim/plugged')
+call plug#begin('~/workspace/.local/share/nvim/plugged')
 
 Plug 'junegunn/vim-easy-align'
 Plug 'aceofall/gtags.vim'
-Plug 'Valloric/YouCompleteMe'
-Plug 'rust-lang/rust.vim', {'for': 'rust'}
-Plug 'rdnetto/YCM-Generator', { 'branch': 'stable' }
-Plug 'fatih/vim-go', { 'for': 'go' }
+Plug 'kien/ctrlp.vim'
 Plug 'plasticboy/vim-markdown', {'for': 'markdown'}
-Plug 'iamcco/markdown-preview.vim', {'for': 'markdown'}
 Plug 'tbastos/vim-lua', {'for': 'lua'}
-Plug 'Raimondi/delimitMate'
 Plug 'scrooloose/nerdcommenter'
-Plug 'w0rp/ale'
-Plug 'davidhalter/jedi-vim', {'for': 'python'}
 Plug 'morhetz/gruvbox'
-Plug 'airblade/vim-gitgutter'
+Plug 'neovimhaskell/haskell-vim', {'for': 'haskell'}
+Plug 'KabbAmine/zeavim.vim'
+Plug 'donRaphaco/neotex', { 'for': 'tex' }
+Plug 'vim-airline/vim-airline'
+Plug 'vim-airline/vim-airline-themes'
+Plug 'vim-erlang/vim-erlang-omnicomplete'
+Plug 'iamcco/markdown-preview.nvim', { 'do': 'cd app & yarn install'  }
+Plug 'neoclide/coc.nvim', {'branch': 'release'}
+Plug 'JuliaEditorSupport/julia-vim'
 
 call plug#end()
+
+nmap <silent> gd <Plug>(coc-definition)
+nmap <silent> gy <Plug>(coc-type-definition)
+nmap <silent> gi <Plug>(coc-implementation)
+nmap <silent> gr <Plug>(coc-references)
+
+let g:neotex_pdflatex_alternative = 'xelatex'
+let g:latex_to_unicode_auto = 1
 
 set t_Co=256
 
@@ -55,9 +64,12 @@ set updatetime=200
 "short cut settings
 nmap <C-x>n :bnext<CR>
 nmap <C-x>p :bprev<CR>
-nmap <C-x>c :bdelete %<CR>
+nmap <C-x>c :bprev\|bdelete#<CR>
+nmap <C-x>l :ls<CR>
 nmap <C-x>j :cn<CR>
 nmap <C-x>k :cp<CR>
+
+tnoremap <Esc> <C-\><C-n>
 
 "map <c-h> <c-w>h
 "map <c-j> <c-w>j
@@ -67,14 +79,10 @@ nmap <C-x>k :cp<CR>
 "快速全局缩进
 nnoremap <F2> gg=G
 
-map <leader>t= :Tab /=<CR>
-map <leader>t: :Tab /:<CR>
-
 "Golang GoImports short cut
-nnoremap <F3> :GoImports<CR>
 nnoremap <F4> :call CompileAndRun()<CR>
 
-let g:go_template_autocreate = 0
+let g:tex_flavor='latex'
 
 func CompileAndRun()
     exec "w"
@@ -100,6 +108,7 @@ set tabstop=4
 set shiftwidth=4
 set expandtab
 
+
 "退格键定义
 set backspace=indent,eol,start
 
@@ -116,15 +125,9 @@ highlight CursorLine cterm=NONE guibg=#C0C0C0
 let g:vim_markdown_folding_disabled = 1
 set nofoldenable
 
-"ycm setting
-let g:ycm_global_ycm_extra_conf = "/home/huang_zhenglin/.ycm_extra_conf.py"
-let g:ycm_python_binary_path = "/usr/bin/python3"
-let g:ycm_server_python_interpreter = "/usr/bin/python2"
-let g:ycm_autoclose_preview_window_after_completion = 1
-let g:ycm_autoclose_preview_window_after_insertion = 1
-let g:ycm_confirm_extra_conf = 0
-map <leader>c :YcmCompleter GoToDeclaration <CR>
-map <leader>f :YcmCompleter GoToDefinition <CR>
+autocmd BufWritePre *.go :call CocAction('runCommand', 'editor.action.organizeImport')
+autocmd BufWritePre *.go,*.rs :call CocAction('format')
+autocmd CursorHold *.c,*.go,*.rs silent call CocActionAsync('highlight')
 
 "autocmd BufNewFile *.cpp,*.[ch] exec ":call SetTitle()"
 func SetTitle()
@@ -135,10 +138,26 @@ func SetTitle()
     call append(line(".")+3, "   > Email:          zhenglin.huang@qdreamer.com")
     call append(line(".")+4, "***********************************************/")
     call append(line(".")+5, "")
-    if &filetype == 'c'
-        call append(line(".")+6, "#include <stdio.h>")
-        call append(line(".")+7, "")
-    endif
+endfunc
+
+autocmd BufNewFile *.h exec ":call SetHeader()"
+func SetHeader()
+    let path = split(expand("%:h"), "/")
+    call add(path, substitute(expand("%:t"), "\\.", "_", ""))
+    let path = filter(path, 'v:val != "."')
+    let defineVar = "__" . toupper(join(path, "_")) . "__"
+    call setline(1, "#ifndef " . defineVar)
+    call append(line("."), "#define " . defineVar)
+    call append(line(".")+1, "")
+    call append(line(".")+2, "#ifdef __cplusplus")
+    call append(line(".")+3, "extern \"C\" {")
+    call append(line(".")+4, "#endif")
+    call append(line(".")+5, "")
+    call append(line(".")+6, "#ifdef __cplusplus")
+    call append(line(".")+7, "};")
+    call append(line(".")+8, "#endif")
+    call append(line(".")+9, "#endif")
+    call setpos(".", [0, line(".")+6, 0, 0])
 endfunc
 
 autocmd BufNewFile *.py exec ":call InitPython()"
@@ -147,6 +166,7 @@ func InitPython()
     call append(line("."), "# -*- coding:utf-8 -*-")
     call append(line(".")+1, "")
     call append(line(".")+2, "")
+    normal G
 endfunc
 
 "autocmd BufNewFile *.lua exec ":call InitLua()"
@@ -154,9 +174,16 @@ func InitLua()
     call setline(1, "#! /usr/bin/env lua")
     call append(line("."), "")
     call append(line(".")+1, "")
+    normal G
 endfunc
 
-autocmd BufNewFile * normal G
+autocmd BufNewFile *.sh exec ":call InitSh()"
+func InitSh()
+    call setline(1, "#! /usr/bin/env bash")
+    call append(line("."), "")
+    call append(line(".")+1, "")
+    normal G
+endfunc
 
 "scons settings
 autocmd BufReadPost SConstruct,Sconstruct,sconstruct,SConscript exec ":call InitScons()"
@@ -165,20 +192,8 @@ func InitScons()
     exec ":let g:pymode_lint = 0"
 endfunc
 
-autocmd BufWritePost *.go exec ":GoImports"
 
 autocmd QuickFixCmdPost * vert copen 90
-
-autocmd InsertEnter * exec ":set norelativenumber nonumber"
-autocmd InsertLeave * exec ":set relativenumber number"
-autocmd BufWinEnter * exec ":set relativenumber number"
-
-func EnterTerm()
-    exec ":set norelativenumber nonumber"
-    exec ":setlocal statusline=%{b:term_title}"
-endfunc
-
-autocmd TermOpen * exec ":call EnterTerm()"
 
 "gtags-vim settings
 set cscopetag
@@ -187,14 +202,18 @@ let GtagsCscope_Auto_Load = 1
 let GtagsCscope_Auto_Map = 1
 let GtagsCscope_Quiet = 1
 
-"jdei-vim settings
-let g:jedi#goto_command = "<C-]>"
-let g:jedi#completions_enabled = 0
-let g:jedi#force_py_version = 3 
-
 "vim-easyalign settings
 vmap <Enter> <Plug>(EasyAlign)
 nmap ga <Plug>(EasyAlign)
 
 packloadall
 silent! helptags ALL
+
+"remember last update or view postion"
+" When editing a file, always jump to the last cursor position 
+autocmd BufReadPost *
+\ if line("'\"") > 0 && line ("'\"") <= line("$") |
+\ exe "normal g'\"" |
+\ endif 
+
+set runtimepath^=~/workspace/.local/share/nvim/plugged/vim-erlang-omnicomplete
